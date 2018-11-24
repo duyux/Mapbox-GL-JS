@@ -3,7 +3,7 @@
 
 <head>
     <meta charset='utf-8' />
-    <title>Display a map</title>
+    <title>绘制点线面</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
@@ -32,50 +32,40 @@
             container: 'map', // container id
             style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location 
             //style:'mapbox://styles/mapbox/satellite-streets-v10',
-            center: [121.50109, 31.23691],
-            // logoPosition:'top-right',
+            center: [104.06, 30.67],
             zoom: 8 // starting zoom
         });
 
-        //display poupu
-        var img = new Image();
-        img.src = './marker-icon.png'
-        var popup = new mapboxgl.Popup({
-                offset: {
-                    'bottom': [0, -42]
+        map.on('load', function () {
+            map.addSource("polySet1", {
+                'type': 'geojson',
+                "data": {
+                    "features": [{
+                        "type": "Feature",
+                        "geometry": {
+                            "coordinates": [
+                                [
+                                    [104.1, 30.67],
+                                    [104.3, 30.67],
+                                    [104.2, 30.87]
+                                ]
+                            ],
+                            "type": 'Polygon' //面
+                        },
+                    }],
+                    "type": 'FeatureCollection' //要素集合
                 }
-            }).setLngLat([121.50109, 31.23691])
-            .setHTML('<h1>Hello World!</h1>')
-
-        var marker = new mapboxgl.Marker(img, {
-                offset: {
-                    x: 0,
-                    y: -20.5
+            });
+            map.addLayer({
+                "id": 'polyLayer1', //图层ID
+                "type": 'fill', //填充面
+                "source": 'polySet1', //使用的数据源ID
+                "paint": {
+                    "fill-color": "blue", //填充色
+                    "fill-opacity": 0.8 //填充透明度
                 }
-            })
-            .setLngLat([121.50109, 31.23691])
-            .setPopup(popup)
-            .addTo(map);
-        //.addTo(map);
-
-
-        // map.on('load', function() {
-        //   map.addLayer({
-        //     id: 'rpd_parks',
-        //     type: 'fill',
-        //     source: {
-        //       type: 'vector',
-        //       url: 'mapbox://mapbox.3o7ubwm8'
-        //     },
-        //     'source-layer': 'RPD_Parks',
-        //     layout: {
-        //       visibility: 'visible'
-        //     },
-        //     paint: {
-        //       'fill-color': 'rgba(61,153,80,0.55)'
-        //     }
-        //   });
-        // });
+            });
+        });
     </script>
 
 </body>
